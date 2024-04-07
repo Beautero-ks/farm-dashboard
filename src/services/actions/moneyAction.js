@@ -82,7 +82,8 @@ export const hasPaidLate = (allKeys) => {
                         'rejected': firebase.firestore.FieldValue.delete(),
                         'ready': firebase.firestore.FieldValue.delete(),
                         'signal': firebase.firestore.FieldValue.delete(),
-                        'values.check_group': '0'
+                        'values.check_group': '0',
+                        'values.submitted_on': new Date()
                     });
 
                     firestore.collection('0').doc('config').update({
