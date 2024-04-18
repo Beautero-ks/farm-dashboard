@@ -649,7 +649,7 @@ export default compose(
             collection: '0',
             doc: 'misc',
             subcollections: [
-                { collection: 'txs', orderBy: ['data.date.unix', 'desc'], limit: 100}
+                { collection: 'txs', where: ['data.check_group', '==', '0'], orderBy: ['data.date.unix', 'desc'], limit: 100}
             ],
             storeAs: 'txs'
         },

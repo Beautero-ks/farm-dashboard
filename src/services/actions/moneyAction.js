@@ -59,11 +59,10 @@ export const sendMoney = (values) => {
 export const hasPaidLate = (allKeys) => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
         const firestore = getFirestore();
-        const firebase = getFirebase();
         let allRes = [];
 
         for (const key of allKeys) {
-            const res = firestore.collection('0').doc('misc').collection("pending").doc(key)
+            const res = firestore.collection('0').doc('misc').collection("txs").doc(key)
                 .get().then((doc) => {
                     if (!doc.exists) {
                         console.log('late doc does not exist')
@@ -73,17 +72,19 @@ export const hasPaidLate = (allKeys) => {
                         ...doc.data()
                     }
 
-                    if (val.values?.check_group !== '1') {
+                    if (val.data?.check_group !== '1') {
                         console.log('Invalid check_group');
                         return 'Invalid check_group';
                     }
+                    const prev_cg = val.data.check_group;
+                    val.data.check_group = '0';
+                    val.data.date = new Date(val.data.date.unix*1000);
+                    val.data.submitted_on = new Date()
 
-                    doc.ref.update({
-                        'rejected': firebase.firestore.FieldValue.delete(),
-                        'ready': firebase.firestore.FieldValue.delete(),
-                        'signal': firebase.firestore.FieldValue.delete(),
-                        'values.check_group': '0',
-                        'values.submitted_on': new Date()
+                    firestore.collection('0').doc('misc').collection("pending").add({
+                        'values': val.data,
+                        'create': true,
+                        'prev_check_group': prev_cg
                     });
 
                     firestore.collection('0').doc('config').update({

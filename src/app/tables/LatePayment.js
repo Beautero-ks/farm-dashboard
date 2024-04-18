@@ -58,8 +58,8 @@ function LatePayment(props) {
         if (!late) return 0;
         let amount = 0;
         for (let i = 0; i < late.length; i++) {
-            if (late[i].values.col_id === "1")
-                amount += parseInt(late[i].values.price) * parseInt(late[i].values.units);
+            if (late[i].data.col_id === "1")
+                amount += parseInt(late[i].data.price) * parseInt(late[i].data.units);
         }
         setFullAmount(amount);
     }, [late]);
@@ -102,17 +102,17 @@ function LatePayment(props) {
         if (!late) return 0;
         const allPend = {};
         for (let i = 0; i < late.length; i++) {
-            const description = sanitize_string(late[i].values)
-                +` ${numeral(late[i].values?.units || late[i].values?.units)
-                    .format('0,0')}@${numeral(late[i].values?.price || late[i].values?.price)
-                    .format('0,0')} on ${moment(late[i].values.date.toDate()).format("MMM Do YY")}`;
+            const description = sanitize_string(late[i].data)
+                +` ${numeral(late[i].data?.units || late[i].data?.units)
+                    .format('0,0')}@${numeral(late[i].data?.price || late[i].data?.price)
+                    .format('0,0')} on ${moment(late[i].data.date.unix*1000).format("MMM Do YY")}`;
 
             allPend[late[i].id] = [
                 all,
-                late[i].values.col_id,
-                late[i].values?.extra_data?.vendor ? `${late[i].values?.item_name}(${late[i].values?.extra_data?.vendor})` : (late[i].values?.item_name || late[i].values?.buyer),
+                late[i].data.col_id,
+                late[i].data?.extra_data?.vendor ? `${late[i].data?.item_name}(${late[i].data?.extra_data?.vendor})` : (late[i].data?.item_name || late[i].data?.buyer),
                 description,
-                parseInt(late[i].values.price) * parseInt(late[i].values.units)
+                parseInt(late[i].data.price) * parseInt(late[i].data.units)
             ];
         }
         setPendChecked(allPend);
@@ -153,14 +153,13 @@ function LatePayment(props) {
                                         </th>
                                         <th>Type</th>
                                         <th>Name</th>
-                                        <th>Status</th>
                                         <th>Total</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {late && Array(...late).map((item) => {
                                         return (
-                                            <tr key={item.id.slice(0,5)} className={`text-${(item.hasOwnProperty('rejected') && item.hasOwnProperty('ready')) ? 'white' : 'muted'}`}>
+                                            <tr key={item.id.slice(0,5)} className={`text-white`}>
                                                 <td>
                                                     <div className="form-check form-check-muted m-0">
                                                         <label className="form-check-label">
@@ -170,13 +169,13 @@ function LatePayment(props) {
                                                                    onClick={() => setPendChecked({...pendChecked,
                                                                        [item.id]: [
                                                                            !(pendChecked[item.id] ? pendChecked[item.id][0] : false),
-                                                                           item.values.col_id,
-                                                                           item.values?.extra_data?.vendor ? `${item.values?.item_name}(${item.values?.extra_data?.vendor})` : (item.values?.item_name || item.values?.buyer),
-                                                                           sanitize_string(item.values)
-                                                                           +` ${numeral(item.values?.units)
-                                                                               .format('0,0')}@${numeral(item.values?.price)
-                                                                               .format('0,0')} on ${moment(item.values.date.toDate()).format("MMM Do YY")}`,
-                                                                           parseInt(item.values.price) * parseInt(item.values.units)
+                                                                           item.data.col_id,
+                                                                           item.data?.extra_data?.vendor ? `${item.data?.item_name}(${item.data?.extra_data?.vendor})` : (item.data?.item_name || item.data?.buyer),
+                                                                           sanitize_string(item.data)
+                                                                           +` ${numeral(item.data?.units)
+                                                                               .format('0,0')}@${numeral(item.data?.price)
+                                                                               .format('0,0')} on ${moment(item.data.date.unix*1000).format("MMM Do YY")}`,
+                                                                           parseInt(item.data.price) * parseInt(item.data.units)
                                                                        ]})}
                                                                    id={item.id} name={item.id}
                                                             />
@@ -184,18 +183,9 @@ function LatePayment(props) {
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td className="text-success">{item.values?.col_id === '2' ? 'P' : 'S'}</td>
-                                                <td>({moment(item.values?.date?.toDate()).format("MMM Do YY")})<br/>{sanitize_string(item.values)} {`${numeral(item.values?.units).format('0,0')}@${numeral(item.values?.price).format('0,0')}`}</td>
-                                                <td>
-                                                    {(item?.rejected > 0 && item?.signal === 1)
-                                                        ? <div className="badge badge-outline-danger">Rejected</div>
-                                                        : (item?.rejected > 0 && item?.signal === 2)
-                                                            ? <div className="badge badge-outline-light">Rejected</div>
-                                                            : item?.ready === true ? <div className="badge badge-outline-success">Ready</div>
-                                                                : (item?.rejected === 0 && item?.ready === false ? <div className="badge badge-outline-info">Skipped</div>
-                                                                : <div className="badge badge-outline-primary">Waiting</div>)}
-                                                </td>
-                                                <td>{numeral(parseInt(item.values.price) * parseInt(item.values.units)).format('0,0')}</td>
+                                                <td className="text-success">{item.data?.col_id === '2' ? 'P' : 'S'}</td>
+                                                <td>({moment(item.data?.date?.unix*1000).format("MMM Do YY")})<br/>{sanitize_string(item.data)} {`${numeral(item.data?.units).format('0,0')}@${numeral(item.data?.price).format('0,0')}`}</td>
+                                                <td>{numeral(parseInt(item.data.price) * parseInt(item.data.units)).format('0,0')}</td>
                                             </tr>
                                         )
                                     })}
@@ -257,7 +247,7 @@ export default compose(
             collection: '0',
             doc: 'misc',
             subcollections: [
-                {collection: 'pending', where: ['values.check_group', '==', '1'], orderBy: ['values.date', 'desc']}
+                {collection: 'txs', where: ['data.check_group', '==', '1'], orderBy: ['data.date.unix', 'desc']}
             ],
             storeAs: 'ppending'
         }
