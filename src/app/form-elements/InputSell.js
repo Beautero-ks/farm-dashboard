@@ -220,7 +220,7 @@ function InputSell(props) {
           </ol>
         </nav>
       </div>
-      <div className='col-xl grid-margin stretch-card'>
+      <div className='col-xl grid-margin stretch-card overflow-auto'>
         <div className='card'>
           <div className='card-body'>
             <h4 className='card-title'>Input Sale</h4>
