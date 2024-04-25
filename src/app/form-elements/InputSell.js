@@ -68,7 +68,6 @@ function InputSell(props) {
 
     const arr = Object.entries(state);
     const trayRegex = /^([0-9]+)$/;
-    const noZeroRegex = /^(0*)$/;
     const alphaNumRegex = /^([A-Z]|[a-z]| |\/|\(|\)|-|\+|=|[0-9])*$/;
 
     if (arr.length < 5) {
@@ -85,11 +84,6 @@ function InputSell(props) {
       if (arr[i][0] === 'tray_no' || arr[i][0] === 'tray_price') {
         if (!trayRegex.test(arr[i][1])) {
           setError('Tray price and amount cannot be negative or not a number');
-          setOpenError(true);
-          return;
-        }
-        if (noZeroRegex.test(arr[i][1])) {
-          setError('Tray price and amount cannot be zero');
           setOpenError(true);
           return;
         }
@@ -149,27 +143,10 @@ function InputSell(props) {
 
   const handleSelect = (e) => {
     if (e.target) {
-      if (e.target?.value === '0') {
-        if (e.target.id === 'paid' || e.target.id === 'not_paid') {
-          const paid = document.getElementById('paid').checked;
-          const not_paid = document.getElementById('not_paid').checked;
-          setState({
-            ...state,
-            paid,
-            not_paid
-          });
-        } else {
-          setState({
-            ...state,
-            [e.target.id]: e.target.checked
-          });
-        }
-      } else {
         setState({
           ...state,
           [e.target.id]: e.target.value
         });
-      }
     } else {
       setState({
         ...state,
