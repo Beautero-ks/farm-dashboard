@@ -102,7 +102,7 @@ function Dashboard(props) {
             if (value) {
                 firestore.collection("0/misc/pending").doc(key).delete();
                 firestore.collection('0').doc('config').update({
-                    waiting: true
+                    requests: firestore.FieldValue.increment(1)
                 });
                 setError(false);
                 setOpen(true);
@@ -113,7 +113,7 @@ function Dashboard(props) {
             if (value) {
                 firestore.collection("0/misc/pending").doc(key).delete();
                 firestore.collection('0').doc('config').update({
-                    waiting: true
+                    requests: firestore.FieldValue.increment(1)
                 });
                 setError(false);
                 setOpen(true);

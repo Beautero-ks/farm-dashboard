@@ -214,7 +214,7 @@ function Navbar(props) {
                       subcollections: [{collection: 'pending', doc: to_del_id}]
                     }, to_add);
                     firestore.collection('0').doc('config').update({
-                      waiting: true
+                      requests: firestore.FieldValue.increment(1)
                     });
                     firestore.delete({
                       collection: '0',

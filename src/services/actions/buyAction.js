@@ -20,7 +20,7 @@ export const inputExpense = (values, isPending) => {
                 values
             });
             firestore.collection('0').doc('config').update({
-                waiting: true
+                requests: firestore.FieldValue.increment(1)
             });
             dispatch({type: 'INPUT_BUYING', values});
         } else {
@@ -31,7 +31,7 @@ export const inputExpense = (values, isPending) => {
                 values
             });
             firestore.collection('0').doc('config').update({
-                waiting: true
+                requests: firestore.FieldValue.increment(1)
             });
             dispatch({
                 type: 'INPUT_BUYING',

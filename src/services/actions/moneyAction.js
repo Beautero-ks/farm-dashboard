@@ -29,7 +29,7 @@ export const sendMoney = (values) => {
                                 values
                             });
                             firestore.collection('0').doc('config').update({
-                                waiting: true
+                                requests: firestore.FieldValue.increment(1)
                             });
                             dispatch({type: 'MONEY_SENT', values});
                         }
@@ -43,7 +43,7 @@ export const sendMoney = (values) => {
                 values
             });
             firestore.collection('0').doc('config').update({
-                waiting: true
+                requests: firestore.FieldValue.increment(1)
             });
             dispatch({type: 'MONEY_SENT', values});
         }
@@ -86,7 +86,7 @@ export const hasPaidLate = (allKeys) => {
                     });
 
                     firestore.collection('0').doc('config').update({
-                        waiting: true
+                        requests: firestore.FieldValue.increment(1)
                     });
 
                     dispatch({type: 'LATE_REPAID'});

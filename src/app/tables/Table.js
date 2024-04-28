@@ -198,7 +198,7 @@ const EnhancedTableToolbar = (props) => {
                                     }
                                 });
                                 firestore.collection('0').doc('config').update({
-                                    waiting: true
+                                    requests: firestore.FieldValue.increment(1)
                                 });
 
                             }
