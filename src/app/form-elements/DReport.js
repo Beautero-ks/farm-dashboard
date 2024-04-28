@@ -21,7 +21,7 @@ export function saveBlob(blob, fileName) {
 const cur_year = new Date().getFullYear();
 const cur_month = new Date().toLocaleString('en-US', { month: 'short' });
 
-function DInvoice() {
+function DReport() {
 
     const [open, setOpen] = useState(false);
     const [openM, setOpenM] = useState('');
@@ -42,6 +42,15 @@ function DInvoice() {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         state.month = state.month.trim().toLowerCase();
+        if (!/^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)$/g.test(state.month)) {
+            console.log('error invalid name')
+            setError("Error occurred: month should be 3 letters");
+            setOpen(false);
+            setOpenError(true);
+            setIsClicked(false);
+            return;
+        }
+
         const fname = uniqid(`${state.year}_${state.month}_report_`, `.pdf`);
         const raw = JSON.stringify({
             year: parseInt(state.year),
@@ -170,4 +179,4 @@ function DInvoice() {
     )
 }
 
-export default DInvoice;
+export default DReport;
