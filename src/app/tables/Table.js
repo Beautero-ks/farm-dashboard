@@ -197,7 +197,7 @@ const EnhancedTableToolbar = (props) => {
                                         date: new Date(0)
                                     }
                                 });
-                                firestore.collection('0').doc('config').update({
+                                firestore.collection("global").doc("config").collection("requests").doc('0').update({
                                     requests: firestore.FieldValue.increment(1)
                                 });
 

@@ -19,7 +19,7 @@ export const inputExpense = (values, isPending) => {
                 create: true,
                 values
             });
-            firestore.collection('0').doc('config').update({
+            firestore.collection("global").doc("config").collection("requests").doc('0').update({
                 requests: firestore.FieldValue.increment(1)
             });
             dispatch({type: 'INPUT_BUYING', values});
@@ -30,7 +30,7 @@ export const inputExpense = (values, isPending) => {
                 create: true,
                 values
             });
-            firestore.collection('0').doc('config').update({
+            firestore.collection("global").doc("config").collection("requests").doc('0').update({
                 requests: firestore.FieldValue.increment(1)
             });
             dispatch({

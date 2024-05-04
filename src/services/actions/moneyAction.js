@@ -28,7 +28,7 @@ export const sendMoney = (values) => {
                                 create: true,
                                 values
                             });
-                            firestore.collection('0').doc('config').update({
+                            firestore.collection("global").doc("config").collection("requests").doc('0').update({
                                 requests: firestore.FieldValue.increment(1)
                             });
                             dispatch({type: 'MONEY_SENT', values});
@@ -42,7 +42,7 @@ export const sendMoney = (values) => {
                 create: true,
                 values
             });
-            firestore.collection('0').doc('config').update({
+            firestore.collection("global").doc("config").collection("requests").doc('0').update({
                 requests: firestore.FieldValue.increment(1)
             });
             dispatch({type: 'MONEY_SENT', values});
@@ -85,7 +85,7 @@ export const hasPaidLate = (allKeys) => {
                         'create': true
                     });
 
-                    firestore.collection('0').doc('config').update({
+                    firestore.collection("global").doc("config").collection("requests").doc('0').update({
                         requests: firestore.FieldValue.increment(1)
                     });
 

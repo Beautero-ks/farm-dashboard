@@ -35,8 +35,8 @@ export const inputSell = (values, isPending) => {
           values
         });
 
-        firestore.collection('0').doc('config').update({
-            requests: firestore.FieldValue.increment(1)
+        firestore.collection("global").doc("config").collection("requests").doc('0').update({
+          requests: firestore.FieldValue.increment(1)
         });
 
         dispatch({
@@ -52,8 +52,8 @@ export const inputSell = (values, isPending) => {
           values
         });
 
-        firestore.collection('0').doc('config').update({
-            requests: firestore.FieldValue.increment(1)
+        firestore.collection("global").doc("config").collection("requests").doc('0').update({
+          requests: firestore.FieldValue.increment(1)
         });
 
         dispatch({
