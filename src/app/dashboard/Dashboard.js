@@ -388,7 +388,7 @@ function Dashboard(props) {
                                let disCheckBox = __user__ !== item_vals.by;
     
                                return (
-                                   <tr key={item.id} className={`text-${(item.hasOwnProperty('rejected') && item.hasOwnProperty('ready')) ? 'white' : 'muted'}`}>
+                                   <tr key={item.id} className={`text-${(item.hasOwnProperty('rejected')) ? 'white' : 'muted'}`}>
                                        <td>
                                            <div className="form-check form-check-muted m-0">
                                                <label className="form-check-label">
@@ -406,13 +406,10 @@ function Dashboard(props) {
                                            </div>
                                        </td>
                                        <td>
-                                           {(item?.rejected > 0 && item?.signal === 1)
+                                           {(item?.rejected > 0)
                                                ? <div className="badge badge-outline-danger">Rejected</div>
-                                               : (item?.rejected > 0 && item?.signal === 2)
-                                                   ? <div className="badge badge-outline-light">Rejected</div>
-                                                   : item?.ready === true ? <div className="badge badge-outline-success">Ready</div>
-                                                       : (item?.rejected === 0 && item?.ready === false ? <div className="badge badge-outline-info">Skipped</div>
-                                                           : <div className="badge badge-outline-primary">Waiting</div>)}
+                                               : (item?.rejected === 0) ? <div className="badge badge-outline-success">Ready</div>
+                                                       : <div className="badge badge-outline-primary">Waiting</div>}
                                        </td>
                                        <td> {moment(item_vals.date.toDate()).format("MMM Do YY")} </td>
                                        <td> flock: {parseInt(item_vals.subgroups?.split('.')[0])+1}, trays: ({item_vals.trays_collected}) </td>
@@ -468,7 +465,7 @@ function Dashboard(props) {
                             disCheckBox = __user__ !== item_vals.by;
 
                             return (
-                                 <tr key={item.id} className={`text-${(item.hasOwnProperty('rejected') && item.hasOwnProperty('ready')) ? 'white' : 'muted'}`}>
+                                 <tr key={item.id} className={`text-${(item.hasOwnProperty('rejected')) ? 'white' : 'muted'}`}>
                                      <td>
                                          <div className="form-check form-check-muted m-0">
                                              <label className="form-check-label">
@@ -484,13 +481,10 @@ function Dashboard(props) {
                                          </div>
                                      </td>
                                      <td>
-                                         {(item?.rejected > 0 && item?.signal === 1)
-                                             ? <div className="badge badge-outline-danger">Rejected</div>
-                                             : (item?.rejected > 0 && item?.signal === 2)
-                                                 ? <div className="badge badge-outline-light">Rejected</div>
-                                                 : item?.ready === true ? <div className="badge badge-outline-success">Ready</div>
-                                                     : (item?.rejected === 0 && item?.ready === false ? <div className="badge badge-outline-info">Skipped</div>
-                                                         : <div className="badge badge-outline-primary">Waiting</div>)}
+                                           {(item?.rejected > 0)
+                                               ? <div className="badge badge-outline-danger">Rejected</div>
+                                               : (item?.rejected === 0) ? <div className="badge badge-outline-success">Ready</div>
+                                                       : <div className="badge badge-outline-primary">Waiting</div>}
                                      </td>
                                      <td> ---- </td>
                                      <td>Delete {item_vals.entry_hash?.slice(0, 4)} from {col_mapping[item_vals.col_id]}</td>
@@ -503,7 +497,7 @@ function Dashboard(props) {
                         if (item_vals.col_id === '3') {
                             disCheckBox = __user__ !== item_vals.by;
                             return (
-                                <tr key={item.id} className={`text-${(item.hasOwnProperty('rejected') && item.hasOwnProperty('ready')) ? 'white' : 'muted'}`}>
+                                <tr key={item.id} className={`text-${(item.hasOwnProperty('rejected')) ? 'white' : 'muted'}`}>
                                     <td>
                                         <div className="form-check form-check-muted m-0">
                                             <label className="form-check-label">
@@ -519,13 +513,10 @@ function Dashboard(props) {
                                         </div>
                                     </td>
                                     <td>
-                                        {(item?.rejected > 0 && item?.signal === 1)
-                                            ? <div className="badge badge-outline-danger">Rejected</div>
-                                            : (item?.rejected > 0 && item?.signal === 2)
-                                                ? <div className="badge badge-outline-light">Rejected</div>
-                                                : item?.ready === true ? <div className="badge badge-outline-success">Ready</div>
-                                                    : (item?.rejected === 0 && item?.ready === false ? <div className="badge badge-outline-info">Skipped</div>
-                                                        : <div className="badge badge-outline-primary">Waiting</div>)}
+                                           {(item?.rejected > 0)
+                                               ? <div className="badge badge-outline-danger">Rejected</div>
+                                               : (item?.rejected === 0) ? <div className="badge badge-outline-success">Ready</div>
+                                                       : <div className="badge badge-outline-primary">Waiting</div>}
                                     </td>
                                     <td> {moment(item_vals?.date?.toDate() || item_vals?.submitted_on?.toDate()).format("MMM Do YY")} </td>
                                     <td>{item_vals.number} {item_vals.state} Chicken(s)</td>
@@ -536,7 +527,7 @@ function Dashboard(props) {
                         }
 
                         return (
-                            <tr key={item.id} className={`text-${(item.hasOwnProperty('rejected') && item.hasOwnProperty('ready')) ? 'white' : 'muted'}`}>
+                            <tr key={item.id} className={`text-${(item.hasOwnProperty('rejected')) ? 'white' : 'muted'}`}>
                                 <td>
                                 <div className={`form-check form-check-muted m-0`}>
                                     <label className="form-check-label">
@@ -552,13 +543,10 @@ function Dashboard(props) {
                                 </div>
                                 </td>
                                 <td>
-                                    {(item?.rejected > 0 && item?.signal === 1)
+                                    {(item?.rejected > 0)
                                         ? <div className="badge badge-outline-danger">Rejected</div>
-                                        : (item?.rejected > 0 && item?.signal === 2)
-                                            ? <div className="badge badge-outline-light">Rejected</div>
-                                            : item?.ready === true ? <div className="badge badge-outline-success">Ready</div>
-                                                : (item?.rejected === 0 && item?.ready === false ? <div className="badge badge-outline-info">Skipped</div>
-                                                    : <div className="badge badge-outline-primary">Waiting</div>)}
+                                        : (item?.rejected === 0) ? <div className="badge badge-outline-success">Ready</div>
+                                                : <div className="badge badge-outline-primary">Waiting</div>}
                                 </td>
                                 <td> {moment(item_vals?.date?.toDate() || item_vals?.submitted_on?.toDate()).format("MMM Do YY")} </td>
                                 <td> {item_vals?.reason === "WITHDRAW" ? "Withdrawal" : sanitize_string(item_vals) +` ${numeral(item.values?.units)
