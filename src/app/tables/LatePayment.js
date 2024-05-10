@@ -58,8 +58,8 @@ function LatePayment(props) {
         if (!late) return 0;
         let amount = 0;
         for (let i = 0; i < late.length; i++) {
-            if (late[i].data.col_id === "1")
-                amount += parseInt(late[i].data.price) * parseInt(late[i].data.units);
+            if (late[i].col_id === "1")
+                amount += parseInt(late[i].price) * parseInt(late[i].units);
         }
         setFullAmount(amount);
     }, [late]);
@@ -102,17 +102,17 @@ function LatePayment(props) {
         if (!late) return 0;
         const allPend = {};
         for (let i = 0; i < late.length; i++) {
-            const description = sanitize_string(late[i].data)
-                +` ${numeral(late[i].data?.units || late[i].data?.units)
-                    .format('0,0')}@${numeral(late[i].data?.price || late[i].data?.price)
-                    .format('0,0')} on ${moment(late[i].data.date.unix*1000).format("MMM Do YY")}`;
+            const description = sanitize_string(late[i])
+                +` ${numeral(late[i]?.units || late[i]?.units)
+                    .format('0,0')}@${numeral(late[i]?.price || late[i]?.price)
+                    .format('0,0')} on ${moment(late[i].date.unix*1000).format("MMM Do YY")}`;
 
             allPend[late[i].id] = [
                 all,
-                late[i].data.col_id,
-                late[i].data?.extra_data?.vendor ? `${late[i].data?.item_name}(${late[i].data?.extra_data?.vendor})` : (late[i].data?.item_name || late[i].data?.buyer),
+                late[i].col_id,
+                late[i]?.extra_data?.vendor ? `${late[i]?.item_name}(${late[i]?.extra_data?.vendor})` : (late[i]?.item_name || late[i]?.buyer),
                 description,
-                parseInt(late[i].data.price) * parseInt(late[i].data.units)
+                parseInt(late[i].price) * parseInt(late[i].units)
             ];
         }
         setPendChecked(allPend);
@@ -169,13 +169,13 @@ function LatePayment(props) {
                                                                    onClick={() => setPendChecked({...pendChecked,
                                                                        [item.id]: [
                                                                            !(pendChecked[item.id] ? pendChecked[item.id][0] : false),
-                                                                           item.data.col_id,
-                                                                           item.data?.extra_data?.vendor ? `${item.data?.item_name}(${item.data?.extra_data?.vendor})` : (item.data?.item_name || item.data?.buyer),
-                                                                           sanitize_string(item.data)
-                                                                           +` ${numeral(item.data?.units)
-                                                                               .format('0,0')}@${numeral(item.data?.price)
-                                                                               .format('0,0')} on ${moment(item.data.date.unix*1000).format("MMM Do YY")}`,
-                                                                           parseInt(item.data.price) * parseInt(item.data.units)
+                                                                           item.col_id,
+                                                                           item?.extra_data?.vendor ? `${item?.item_name}(${item?.extra_data?.vendor})` : (item?.item_name || item?.buyer),
+                                                                           sanitize_string(item)
+                                                                           +` ${numeral(item?.units)
+                                                                               .format('0,0')}@${numeral(item?.price)
+                                                                               .format('0,0')} on ${moment(item.date.unix*1000).format("MMM Do YY")}`,
+                                                                           parseInt(item.price) * parseInt(item.units)
                                                                        ]})}
                                                                    id={item.id} name={item.id}
                                                             />
@@ -183,9 +183,9 @@ function LatePayment(props) {
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td className="text-success">{item.data?.col_id === '2' ? 'P' : 'S'}</td>
-                                                <td>({moment(item.data?.date?.unix*1000).format("MMM Do YY")})<br/>{sanitize_string(item.data)} {`${numeral(item.data?.units).format('0,0')}@${numeral(item.data?.price).format('0,0')}`}</td>
-                                                <td>{numeral(parseInt(item.data.price) * parseInt(item.data.units)).format('0,0')}</td>
+                                                <td className="text-success">{item?.col_id === '2' ? 'P' : 'S'}</td>
+                                                <td>({moment(item?.date?.unix*1000).format("MMM Do YY")})<br/>{sanitize_string(item)} {`${numeral(item?.units).format('0,0')}@${numeral(item?.price).format('0,0')}`}</td>
+                                                <td>{numeral(parseInt(item.price) * parseInt(item.units)).format('0,0')}</td>
                                             </tr>
                                         )
                                     })}
@@ -247,7 +247,7 @@ export default compose(
             collection: '0',
             doc: 'misc',
             subcollections: [
-                {collection: 'txs', where: ['data.check_group', '==', '1'], orderBy: ['data.date.unix', 'desc']}
+                {collection: 'txs', where: ['check_group', '==', '1'], orderBy: ['date.unix', 'desc']}
             ],
             storeAs: 'ppending'
         }

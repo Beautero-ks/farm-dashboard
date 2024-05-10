@@ -72,16 +72,16 @@ export const hasPaidLate = (allKeys) => {
                         ...doc.data()
                     }
 
-                    if (val.data?.check_group !== '1') {
+                    if (val?.check_group !== '1') {
                         console.log('Invalid check_group');
                         return 'Invalid check_group';
                     }
-                    val.data.check_group = '0';
-                    val.data.date = new Date(val.data.date.unix*1000);
-                    val.data.submitted_on = new Date()
+                    val.check_group = '0';
+                    val.date = new Date(val.date.unix*1000);
+                    val.submitted_on = new Date()
 
                     firestore.collection('0').doc('misc').collection("pending").add({
-                        'values': val.data,
+                        'values': val,
                         'create': true
                     });
 

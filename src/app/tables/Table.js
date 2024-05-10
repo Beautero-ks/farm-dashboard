@@ -232,7 +232,7 @@ function EnhancedTable(props) {
     const [order, setOrder] = useState('desc');
     const [txs, setTxs] = useState({});
     const [txWatch, setTxWatch] = useState([]);
-    const [orderBy, setOrderBy] = useState('data.date.unix');
+    const [orderBy, setOrderBy] = useState('date.unix');
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [dense, setDense] = useState(false);
@@ -263,13 +263,13 @@ function EnhancedTable(props) {
             tx = tx[1];
             local_txs = {
                 ...local_txs,
-                [tx.data.entry_hash]: tx
+                [tx.entry_hash]: tx
             };
             if (tx.col !== 'trades') {
-                temp.push(createData(tx.data.col_id, tx.col, tx.data.date.unix, tx.data.submitted_on.unix, tx.data.entry_hash, tx.data.subgroups));
+                temp.push(createData(tx.col_id, tx.col, tx.date.unix, tx.submitted_on.unix, tx.entry_hash, tx.subgroups));
             }
             else if (tx.col === 'trades') {
-                if (JSON.stringify(tx.data.links) === '{}') temp.push(createData(tx.data.col_id, tx.col, tx.data.date.unix, tx.data.submitted_on.unix, tx.data.entry_hash, tx.data.subgroups));
+                if (JSON.stringify(tx.links) === '{}') temp.push(createData(tx.col_id, tx.col, tx.date.unix, tx.submitted_on.unix, tx.entry_hash, tx.subgroups));
             }
         }
         setTxs(local_txs);
@@ -363,11 +363,11 @@ function EnhancedTable(props) {
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(`${row.col_id}!!${row.hash}!!${row.subg}`);
                                     const labelId = `enhanced-table-checkbox-${index}`;
-                                    const data = txs[row.hash]?.data;
+                                    const data = txs[row.hash];
 
                                     let from;
                                     let to;
-                                    if (row.name === 'trades') {
+                                    if (row.col_id === '5') {
                                         from = data.from.toLowerCase();
                                         to = data.to.toLowerCase();
                                         from = from.split('_');
@@ -379,12 +379,12 @@ function EnhancedTable(props) {
                                     }
 
                                     const by = data.by.toLowerCase();
-                                    const toPrint = row.name === 'eggs_collected' ? `flock: ${parseInt(data.subgroups.split('.')[0])+1} (${by}) trays ${data.trays_collected} [${row.hash.slice(0, 4)}]`
-                                        : row.name === 'dead_sick'
+                                    const toPrint = row.col_id === '4' ? `flock: ${parseInt(data.subgroups.split('.')[0])+1} (${by}) trays ${data.trays_collected} [${row.hash.slice(0, 4)}]`
+                                        : row.col_id === '3'
                                             ? `(${by}) ${numeral(data.number).format(',')} ${data.state.toLowerCase()} [${row.hash.slice(0, 4)}]`
-                                            : row.name === 'sales' ? `(${by}) to ${data.buyer.toLowerCase()} ${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]`
-                                                : (row.name === 'purchases' || row.name === 'expenses') ? `(${by}) ${data.item_name.toLowerCase()} ${data.extra_data.bag_weight ? data.extra_data.bag_weight+' ' : ''}${data.extra_data.vendor?.toLowerCase() ? data.extra_data.vendor?.toLowerCase()+' ' : ''}${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]`
-                                                    : row.name === 'trades' ? `from ${from} to ${to} [${row.hash.slice(0, 4)}]` : '';
+                                            : row.col_id === '1' ? `(${by}) to ${data.buyer.toLowerCase()} ${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]`
+                                                : (row.col_id === '2' || row.col_id === 'expenses') ? `(${by}) ${data.item_name.toLowerCase()} ${data.extra_data.bag_weight ? data.extra_data.bag_weight+' ' : ''}${data.extra_data.vendor?.toLowerCase() ? data.extra_data.vendor?.toLowerCase()+' ' : ''}${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]`
+                                                    : row.col_id === '5' ? `from ${from} to ${to} [${row.hash.slice(0, 4)}]` : '';
 
                                     return (
                                         <TableRow
@@ -411,7 +411,7 @@ function EnhancedTable(props) {
                                                 scope="row"
                                                 padding="none"
                                             >
-                                                {row.name.split('_').join(' ')} {toPrint}
+                                                {row.col_id.split('_').join(' ')} {toPrint}
                                             </TableCell>
                                             <TableCell align="right">{moment.unix(row.date).format("ddd ll")}</TableCell>
                                             <TableCell align="right">{moment.unix(row.subm).format("ddd ll")}</TableCell>
@@ -463,26 +463,26 @@ function EnhancedTable(props) {
             />
             {selected.map((item_, index) => {
                 const item = item_.split('!!')[1]
-                const type = txs[item].col;
+                const type = txs[item].col_id;
 
-                if (type === 'eggs_collected') {
+                if (type === '4') {
                     return (
                         <div key={index}>
                             <Card variant="outlined">
                                 <React.Fragment>
                                     <CardContent>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            Date: {txs[item].data.date.locale.slice(0,20)}
+                                            Date: {txs[item].date.locale.slice(0,20)}
                                         </Typography>
                                         <Typography variant="h5" component="div">
-                                            Collected {txs[item].data.trays_collected.split(',')[0]} tray(s) and {txs[item].data.trays_collected.split(',')[1]} egg(s)
+                                            Collected {txs[item].trays_collected.split(',')[0]} tray(s) and {txs[item].trays_collected.split(',')[1]} egg(s)
                                         </Typography>
                                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                            {JSON.stringify(txs[item].data)}
-                                            Broken: {txs[item].data.broken}
+                                            {JSON.stringify(txs[item])}
+                                            Broken: {txs[item].broken}
                                         </Typography>
                                         <Typography variant="body2">
-                                            Submitted by {txs[item].data.by.toLowerCase()}
+                                            Submitted by {txs[item].by.toLowerCase()}
                                         </Typography>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             id: {item.slice(0, 32)}<br />
@@ -495,29 +495,29 @@ function EnhancedTable(props) {
                         </div>
                     )
                 }
-                else if (type === 'trades') {
+                else if (type === '5') {
                     return (
                         <div key={index}>
                             <Card variant="outlined">
                                 <React.Fragment>
                                     <CardContent>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            Date: {txs[item].data.date.locale.slice(0,20)}
+                                            Date: {txs[item].date.locale.slice(0,20)}
                                         </Typography>
                                         <Typography variant="h5" component="div">
-                                            {JSON.stringify(txs[item].data.links) === '{}' ? 'Physical Trade' : `Tied to the ${JSON.stringify(txs[item].data.links)}`}
+                                            {JSON.stringify(txs[item].links) === '{}' ? 'Physical Trade' : `Tied to the ${JSON.stringify(txs[item].links)}`}
                                         </Typography>
                                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                            From: {txs[item].data.from.toLowerCase()}
+                                            From: {txs[item].from.toLowerCase()}
                                             <br />
-                                            To: {txs[item].data.to.toLowerCase()}
+                                            To: {txs[item].to.toLowerCase()}
                                             <br />
-                                            Amount traded: Ksh. {Number.isInteger(txs[item].data.amount) ? numeral(txs[item].data.amount).format("0,0") : numeral(txs[item].data.amount).format("0,0.00")}
+                                            Amount traded: Ksh. {Number.isInteger(txs[item].amount) ? numeral(txs[item].amount).format("0,0") : numeral(txs[item].amount).format("0,0.00")}
                                             <br />
-                                            {JSON.stringify(txs[item].data.extra_data)}
+                                            {JSON.stringify(txs[item].extra_data)}
                                         </Typography>
                                         <Typography variant="body2">
-                                            Submitted by {txs[item].data.by.toLowerCase()}
+                                            Submitted by {txs[item].by.toLowerCase()}
                                         </Typography>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             id: {item.slice(0, 32)}<br />
@@ -530,23 +530,23 @@ function EnhancedTable(props) {
                         </div>
                     )
                 }
-                else if (type === 'sales') {
+                else if (type === '1') {
                     return (
                         <div key={index}>
                             <Card variant="outlined">
                                 <React.Fragment>
                                     <CardContent>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            Date: {txs[item].data.date.locale.slice(0,20)}
+                                            Date: {txs[item].date.locale.slice(0,20)}
                                         </Typography>
                                         <Typography variant="h5" component="div">
-                                            {txs[item].data.buyer.toLowerCase()}
+                                            {txs[item].buyer.toLowerCase()}
                                         </Typography>
                                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                            {numeral(txs[item].data.units).format("0,0")} Tray(s) at Ksh. {numeral(txs[item].data.price).format("0,0")}
+                                            {numeral(txs[item].units).format("0,0")} Tray(s) at Ksh. {numeral(txs[item].price).format("0,0")}
                                         </Typography>
                                         <Typography variant="body2">
-                                            Submitted by {txs[item].data.by.toLowerCase()}
+                                            Submitted by {txs[item].by.toLowerCase()}
                                         </Typography>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             id: {item.slice(0, 32)}<br />
@@ -559,25 +559,25 @@ function EnhancedTable(props) {
                         </div>
                     )
                 }
-                else if (type === 'purchases' || type === 'expenses') {
+                else if (type === '2') {
                     return (
                         <div key={index}>
                             <Card variant="outlined">
                                 <React.Fragment>
                                     <CardContent>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            Date: {txs[item].data.date.locale.slice(0,20)}
+                                            Date: {txs[item].date.locale.slice(0,20)}
                                         </Typography>
                                         <Typography variant="h5" component="div">
-                                            {`${txs[item].data.section.toLowerCase() === 'pother' ? 'other,' : txs[item].data.section.toLowerCase() === 'ppurity' ? 'Purity:' : txs[item].data.section.toLowerCase()+','} ${txs[item].data.item_name.toLowerCase()}`}
+                                            {`${txs[item].section.toLowerCase() === 'pother' ? 'other,' : txs[item].section.toLowerCase() === 'ppurity' ? 'Purity:' : txs[item].section.toLowerCase()+','} ${txs[item].item_name.toLowerCase()}`}
                                         </Typography>
                                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                            {numeral(txs[item].data.units).format("0,0")} Item(s) at Ksh. {numeral(txs[item].data.price).format("0,0")}
+                                            {numeral(txs[item].units).format("0,0")} Item(s) at Ksh. {numeral(txs[item].price).format("0,0")}
                                             <br />
-                                            {JSON.stringify(txs[item].data.extra_data)}
+                                            {JSON.stringify(txs[item].extra_data)}
                                         </Typography>
                                         <Typography variant="body2">
-                                            Submitted by {txs[item].data.by.toLowerCase()}
+                                            Submitted by {txs[item].by.toLowerCase()}
                                         </Typography>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             id: {item.slice(0, 32)}<br />
@@ -590,9 +590,9 @@ function EnhancedTable(props) {
                         </div>
                     )
                 }
-                else if (type === 'dead_sick') {
+                else if (type === '3') {
                     const econs = extra_data.constants;
-                    let val = econs.all_subgroups[txs[item].data.subgroups];
+                    let val = econs.all_subgroups[txs[item].subgroups];
 
                     return (
                         <div key={index}>
@@ -600,22 +600,22 @@ function EnhancedTable(props) {
                                 <React.Fragment>
                                     <CardContent>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            {txs[item].data.state.toLowerCase()}
+                                            {txs[item].state.toLowerCase()}
                                             <br />
-                                            Date: {txs[item].data.date.locale.slice(0,20)}
+                                            Date: {txs[item].date.locale.slice(0,20)}
                                         </Typography>
                                         <Typography variant="h5" component="div">
-                                            {`${txs[item].data.state.toLowerCase()}, ${val}`}
+                                            {`${txs[item].state.toLowerCase()}, ${val}`}
                                         </Typography>
                                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                            {numeral(txs[item].data.number).format("0,0")} {txs[item].data.state.toLowerCase()}
+                                            {numeral(txs[item].number).format("0,0")} {txs[item].state.toLowerCase()}
                                             <br />
-                                            {txs[item].data.reason.toLowerCase()}
+                                            {txs[item].reason.toLowerCase()}
                                             <br />
-                                            {JSON.stringify(txs[item].data.extra_data)}
+                                            {JSON.stringify(txs[item].extra_data)}
                                         </Typography>
                                         <Typography variant="body2">
-                                            Submitted by {txs[item].data.by.toLowerCase()}
+                                            Submitted by {txs[item].by.toLowerCase()}
                                         </Typography>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             id: {item.slice(0, 32)}<br />
@@ -649,7 +649,7 @@ export default compose(
             collection: '0',
             doc: 'misc',
             subcollections: [
-                { collection: 'txs', where: ['data.check_group', '==', '0'], orderBy: ['data.date.unix', 'desc'], limit: 100}
+                { collection: 'txs', where: ['check_group', '==', '0'], orderBy: ['date.unix', 'desc'], limit: 100}
             ],
             storeAs: 'txs'
         },
