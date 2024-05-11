@@ -34,6 +34,7 @@ import {firestore} from '../../services/api/firebaseConfig';
 
 
 const __user__ = localStorage.getItem('name')?.toUpperCase() || '';
+const col_names = {"1": "Sale", "2": "Expense", "3": "Dead/Sick", "4": "Eggs", "5": "Trades"}
 
 function createData(col_id, name, date, subm, hash, subg) {
     return {
@@ -411,7 +412,7 @@ function EnhancedTable(props) {
                                                 scope="row"
                                                 padding="none"
                                             >
-                                                {row.col_id.split('_').join(' ')} {toPrint}
+                                                {col_names[row.col_id]} {toPrint}
                                             </TableCell>
                                             <TableCell align="right">{moment.unix(row.date).format("ddd ll")}</TableCell>
                                             <TableCell align="right">{moment.unix(row.subm).format("ddd ll")}</TableCell>
