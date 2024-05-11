@@ -220,12 +220,12 @@ function Dashboard(props) {
                                  <div className="d-flex align-items-center align-self-start">
                                      <h3 className="mb-0">{!done1 &&
                                          <CountUp
-                                             start={Math.abs(Object.values(dash.laying_day['1'])[0]-10)}
-                                             end={Object.values(dash.laying_day['1'])[0]}
+                                             start={Math.abs(Object.values(dash.laying_day['1'] || [0])[0]-10)}
+                                             end={Object.values(dash.laying_day['1'] || [0])[0]}
                                              duration={2.75}
                                              delay={1}
                                              onEnd={() => setDone1(true)}
-                                         />}{done1 && numeral(Object.values(dash.laying_day['1'])[0]).format("0,0")}%</h3>
+                                         />}{done1 && numeral(Object.values(dash.laying_day['1'] || [0])[0]).format("0,0")}%</h3>
                                      <p className={`text-success ml-2 mb-0 font-weight-medium`}>
                                          {'+'.concat(numeral().format("0,0.0"))}%
                                      </p>
@@ -240,7 +240,7 @@ function Dashboard(props) {
                                  </div>
                              </div>
                          </div>
-                         <h6 className="text-white-80 font-weight-normal">Flock 2 Lay Percent Day ({moment(Object.keys(dash.laying_day['1'])[0]*1000).format('MMM Do YY')})</h6>
+                         <h6 className="text-white-80 font-weight-normal">Flock 2 Lay Percent Day ({moment(Object.keys(dash.laying_day['1'] || [0])[0]*1000).format('MMM Do YY')})</h6>
                      </div>
                  </div>
              </div>
@@ -299,7 +299,7 @@ function Dashboard(props) {
                              <div className="col-9">
                                  <div className="d-flex align-items-center align-self-start">
                                      <h3 className="mb-0">
-                                         {Object.values(dash.feeds_left['1'])[0]}
+                                         {Object.values(dash.feeds_left['1'] || [0])[0]}
                                      </h3>
                                      <p className={`text-success ml-2 mb-0 font-weight-medium`}>
                                          {'+'.concat(numeral().format("0,0.0"))}%
@@ -312,7 +312,7 @@ function Dashboard(props) {
                                  </div>
                              </div>
                          </div>
-                         <h6 className="text-white-80 font-weight-normal">Flock 2 Feeds in Store <br /> ({moment(Object.keys(dash.feeds_left['1'])[0]*1000).format('MMM Do YY')})</h6>
+                         <h6 className="text-white-80 font-weight-normal">Flock 2 Feeds in Store <br /> ({moment(Object.keys(dash.feeds_left['1'] || [0])[0]*1000).format('MMM Do YY')})</h6>
                      </div>
                  </div>
              </div>
