@@ -22,6 +22,7 @@ function LatePayment(props) {
     const [pendChecked, setPendChecked] = useState({});
     const [total, setTotal] = useState(0);
     const [fullAmount, setFullAmount] = useState(0);
+    const [paying, setPaying] = useState([]);
 
     // undo write events to database
     const latePaid = async () => {
@@ -31,6 +32,8 @@ function LatePayment(props) {
             const value = val[0];
             if (value) allKeys.push(key);
         }
+        setPaying(allKeys);
+
         const res = await props.hasPaidLate(allKeys);
         console.log("RESS", res);
 
@@ -183,9 +186,9 @@ function LatePayment(props) {
                                                         </label>
                                                     </div>
                                                 </td>
-                                                <td className="text-success">{item?.col_id === '2' ? 'P' : 'S'}</td>
-                                                <td>({moment(item?.date?.unix*1000).format("MMM Do YY")})<br/>{sanitize_string(item)} {`${numeral(item?.units).format('0,0')}@${numeral(item?.price).format('0,0')}`}</td>
-                                                <td>{numeral(parseInt(item.price) * parseInt(item.units)).format('0,0')}</td>
+                                                <td className={paying.includes(item.id) ? "text-muted" : "text-success"}>{item?.col_id === '2' ? 'P' : 'S'}</td>
+                                                <td className={paying.includes(item.id) ? "text-muted" : ""}>({moment(item?.date?.unix*1000).format("MMM Do YY")})<br/>{sanitize_string(item)} {`${numeral(item?.units).format('0,0')}@${numeral(item?.price).format('0,0')}`}</td>
+                                                <td className={paying.includes(item.id) ? "text-muted" : ""}>{numeral(parseInt(item.price) * parseInt(item.units)).format('0,0')}</td>
                                             </tr>
                                         )
                                     })}
