@@ -5,10 +5,11 @@
   "targets": {
     "poultry101-f1fa0": {
       "hosting": {
-        "poultryfarm2.web.app": [
-          "poultryfarm2"
+        "poultry101.web.app": [
+          "poultry101"
         ]
       }
     }
-  }
+  },
+  "etags": {}
 }
