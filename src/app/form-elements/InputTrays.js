@@ -45,8 +45,8 @@ function InputTrays() {
                             "%m/%d/%Y, %H:%M:%S", new Date(today*1000)) + ', Africa/Nairobi'
                     }
                 }, {merge: true});
-            firestore.collection("global").doc("config").collection("requests").doc('0').update({
-                requests: firestore.FieldValue.increment(1)
+            firestore.collection("global").doc("config").collection("tasks_left").doc('0').update({
+                tasks_left: firestore.FieldValue.increment(1)
             });
             setOpenError(false);
             setOpenM('Data Submitted');

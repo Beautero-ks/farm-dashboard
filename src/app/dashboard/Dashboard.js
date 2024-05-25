@@ -101,8 +101,8 @@ function Dashboard(props) {
         for (const [key, value] of Object.entries(pendCheckedEggs)) {
             if (value) {
                 firestore.collection("0/misc/pending").doc(key).delete();
-                firestore.collection("global").doc("config").collection("requests").doc('0').update({
-                    requests: firestore.FieldValue.increment(1)
+                firestore.collection("global").doc("config").collection("tasks_left").doc('0').update({
+                    tasks_left: firestore.FieldValue.increment(1)
                 });
                 setError(false);
                 setOpen(true);
@@ -112,8 +112,8 @@ function Dashboard(props) {
         for (const [key, value] of Object.entries(pendChecked)) {
             if (value) {
                 firestore.collection("0/misc/pending").doc(key).delete();
-                firestore.collection("global").doc("config").collection("requests").doc('0').update({
-                    requests: firestore.FieldValue.increment(1)
+                firestore.collection("global").doc("config").collection("tasks_left").doc('0').update({
+                    tasks_left: firestore.FieldValue.increment(1)
                 });
                 setError(false);
                 setOpen(true);

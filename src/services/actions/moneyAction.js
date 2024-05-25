@@ -28,8 +28,8 @@ export const sendMoney = (values) => {
                                 create: true,
                                 values
                             });
-                            firestore.collection("global").doc("config").collection("requests").doc('0').update({
-                                requests: firestore.FieldValue.increment(1)
+                            firestore.collection("global").doc("config").collection("tasks_left").doc('0').update({
+                                tasks_left: firestore.FieldValue.increment(1)
                             });
                             dispatch({type: 'MONEY_SENT', values});
                         }
@@ -42,8 +42,8 @@ export const sendMoney = (values) => {
                 create: true,
                 values
             });
-            firestore.collection("global").doc("config").collection("requests").doc('0').update({
-                requests: firestore.FieldValue.increment(1)
+            firestore.collection("global").doc("config").collection("tasks_left").doc('0').update({
+                tasks_left: firestore.FieldValue.increment(1)
             });
             dispatch({type: 'MONEY_SENT', values});
         }
@@ -85,8 +85,8 @@ export const hasPaidLate = (allKeys) => {
                         'create': true
                     });
 
-                    firestore.collection("global").doc("config").collection("requests").doc('0').update({
-                        requests: firestore.FieldValue.increment(1)
+                    firestore.collection("global").doc("config").collection("tasks_left").doc('0').update({
+                        tasks_left: firestore.FieldValue.increment(1)
                     });
 
                     dispatch({type: 'LATE_REPAID'});

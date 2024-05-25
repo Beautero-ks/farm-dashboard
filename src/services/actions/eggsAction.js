@@ -21,8 +21,8 @@ export const inputTray = (eggs) => {
             create: true,
             values
         });
-        firestore.collection("global").doc("config").collection("requests").doc('0').update({
-            requests: firestore.FieldValue.increment(1)
+        firestore.collection("global").doc("config").collection("tasks_left").doc('0').update({
+            tasks_left: firestore.FieldValue.increment(1)
         });
         console.log('done');
     }
