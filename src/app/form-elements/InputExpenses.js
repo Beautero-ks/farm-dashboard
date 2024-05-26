@@ -263,7 +263,7 @@ function InputExpense(props) {
             let g = Object.keys(object).find(key => object[key] === e);
             if (e === 'all') {
                 const all_groups = Object.keys(object).filter(
-                    key => key.split('.')[1] === '0');
+                    key => key.split('.')[1] === '0' && key.split('.')[0] !== '2');
                 g = all_groups;
                 g = g.join(';');
             }

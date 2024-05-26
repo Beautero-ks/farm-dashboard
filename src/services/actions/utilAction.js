@@ -14,4 +14,8 @@ export const sanitize_string = (values) => {
             return description.charAt(0).toUpperCase()+description.slice(1);
         }
     }
+    if (values.col_id === '6') {
+        const description = values.buyer.toLowerCase();
+        return description.charAt(0).toUpperCase()+description.slice(1);
+    }
 }

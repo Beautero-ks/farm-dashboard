@@ -31,6 +31,7 @@ function InputSell(props) {
   const [redirect, setRedirect] = useState(false);
   const [error, setError] = useState('');
   const [buyer_names, setBuyerNames] = useState([]);
+  const [saleType, setSaleType] = useState('Eggs');
 
   useEffect(() => {
     if (extraData) {
@@ -81,9 +82,9 @@ function InputSell(props) {
         setOpenError(true);
         return;
       }
-      if (arr[i][0] === 'tray_no' || arr[i][0] === 'tray_price') {
+      if (arr[i][0] === 'units' || arr[i][0] === 'price') {
         if (!trayRegex.test(arr[i][1])) {
-          setError('Tray price and amount cannot be negative or not a number');
+          setError('Unit price and amount cannot be negative or not a number');
           setOpenError(true);
           return;
         }
@@ -162,6 +163,15 @@ function InputSell(props) {
     });
   }
 
+  const handleSaleType = (e) => {
+    setSaleType(e);
+
+    setState({
+      ...state,
+      col_id: e === 'Other' ? '6' : '1'
+    });
+  }
+
   const componentDidMount = () => {
     bsCustomFileInput.init();
   };
@@ -213,6 +223,19 @@ function InputSell(props) {
                 />
               </Form.Group>
               <Form.Group>
+                <label htmlFor='col_id'>Sale Type</label>
+                <DropdownButton
+                    alignRight
+                    title={saleType || 'Choose Sale Type'}
+                    id='col_id'
+                    onSelect={handleSaleType}
+                >
+                  {['Eggs', 'Other'].map(x => {
+                    return <Dropdown.Item eventKey={x}>{x}</Dropdown.Item>
+                  })}
+                </DropdownButton>
+              </Form.Group>
+              <Form.Group>
                 <label htmlFor='buyer'>Buyer Name</label>
                 <DropdownButton
                     alignRight
@@ -226,24 +249,24 @@ function InputSell(props) {
                 </DropdownButton>
               </Form.Group>
               <Form.Group>
-                <label htmlFor='units'>Number of Trays</label>
+                <label htmlFor='units'>Number of Units</label>
                 <Form.Control
                   type='text'
                   onChange={handleSelect}
                   value={state.units}
                   className="form-control text-white"
                   id='units'
-                  placeholder='Number of Trays'
+                  placeholder='Number of Units'
                 />
               </Form.Group>
               <Form.Group>
-                <label htmlFor='price'>Price per Tray</label>
+                <label htmlFor='price'>Price per Unit</label>
                 <Form.Control
                   type='text'
                   onChange={handleSelect}
                   className="form-control text-white"
                   id='price'
-                  placeholder='Price per Tray'
+                  placeholder='Price per Unit'
                   value={state.price}
                 />
               </Form.Group>

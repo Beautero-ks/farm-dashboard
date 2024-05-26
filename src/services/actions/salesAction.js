@@ -6,7 +6,8 @@ export const getSectionAddr = (section) => {
   if (section === 'Duka') return 'DUKA';
   if (section === 'Feeds') return 'FEEDS';
   if (section === 'Drugs') return 'DRUGS';
-  if (section === 'Pay Purity') return 'PPURITY';
+  if (section === 'Pay Titus') return 'PTITUS';
+  if (section === 'Pay Ezekiel') return 'PEZEKIEL';
   if (section === 'Other Expenses') return 'POTHER';
 }
 
