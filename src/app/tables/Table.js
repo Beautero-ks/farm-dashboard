@@ -385,7 +385,7 @@ function EnhancedTable(props) {
                                             ? `(${by}) ${numeral(data.number).format(',')} ${data.state.toLowerCase()} [${row.hash.slice(0, 4)}]`
                                             : row.col_id === '1' ? `(${by}) to ${data.buyer.toLowerCase()} ${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]`
                                                 : (row.col_id === '2' || row.col_id === 'expenses') ? `(${by}) ${data.item_name.toLowerCase()} ${data.extra_data.bag_weight ? data.extra_data.bag_weight+' ' : ''}${data.extra_data.vendor?.toLowerCase() ? data.extra_data.vendor?.toLowerCase()+' ' : ''}${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]`
-                                                    : row.col_id === '5' ? `from ${from} to ${to} [${row.hash.slice(0, 4)}]` : '';
+                                                    : row.col_id === '5' ? `from ${from} to ${to} [${row.hash.slice(0, 4)}]` : row.col_id === '6' ? `(${by}) to ${data.buyer.toLowerCase()} ${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]` : '';
 
                                     return (
                                         <TableRow
@@ -614,6 +614,34 @@ function EnhancedTable(props) {
                                             {txs[item].reason.toLowerCase()}
                                             <br />
                                             {JSON.stringify(txs[item].extra_data)}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Submitted by {txs[item].by.toLowerCase()}
+                                        </Typography>
+                                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            id: {item.slice(0, 32)}<br />
+                                            {item.slice(32)}
+                                        </Typography>
+                                    </CardContent>
+                                </React.Fragment>
+                            </Card>
+                            <br />
+                        </div>
+                    )
+                } else if (type === '6') {
+                    return (
+                        <div key={index}>
+                            <Card variant="outlined">
+                                <React.Fragment>
+                                    <CardContent>
+                                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            Date: {txs[item].date.locale.slice(0,20)}
+                                        </Typography>
+                                        <Typography variant="h5" component="div">
+                                            {txs[item].buyer.toLowerCase()}
+                                        </Typography>
+                                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                            {numeral(txs[item].units).format("0,0")} Units(s) at Ksh. {numeral(txs[item].price).format("0,0")}
                                         </Typography>
                                         <Typography variant="body2">
                                             Submitted by {txs[item].by.toLowerCase()}
