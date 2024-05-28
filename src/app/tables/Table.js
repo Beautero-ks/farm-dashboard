@@ -672,6 +672,12 @@ function EnhancedTable(props) {
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             Date: {txs[item].date.locale.slice(0,20)}
                                         </Typography>
+                                        <Typography variant="h5" component="div">
+                                            Checkpoint {toTrayStr(txs[item]?.trays_collected)} trays in store
+                                        </Typography>
+                                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                            {JSON.stringify(txs[item])}
+                                        </Typography>
                                         <Typography variant="body2">
                                             Submitted by {txs[item].by.toLowerCase()}
                                         </Typography>
