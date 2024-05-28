@@ -6,28 +6,35 @@ import Snackbar from "@material-ui/core/Snackbar";
 import {Alert} from "./InputEggs";
 import {Offline, Online} from "react-detect-offline";
 import {firestore} from '../../services/api/firebaseConfig';
-import "strftime";
-import strftime from 'strftime';
 
-
-let today = new Date();
-today.setHours(0, 0, 0, 0);
-today = Math.floor(today.getTime() / 1000);
-const name = localStorage.getItem('name')?.toUpperCase() || '';
 
 function InputTrays() {
+    const [state, setState] = useState({
+        col_id: '1',
+        date: new Date(),
+        by: localStorage.getItem('name')?.toUpperCase() || '',
+        extra_data: {info: ''}
+    });
     const [open, setOpen] = useState(false);
     const [openM, setOpenM] = useState('Data Submitted');
     const [openError, setOpenError] = useState(false);
     const [redirect, setRedirect] = useState(false);
     const [error, setError] = useState('');
-
-    const [state, setState] = useState('');
+    const [trayNo, setTrayNo] = useState('');
 
     const handleClick = (e) => {
         e.preventDefault();
+        const values = {
+            ...state,
+            submitted_on: new Date(),
+            check_group: "0",
+            subgroups: "0.0;1.0"
+        };
+        let newDate = values.date;
+        newDate.setHours(0, 0, 0, 0);
+        values.date = newDate;
 
-        let traysOk = /^[\d]+,([0-9]|1[0-9]|2[0-9])$/.test(state);
+        let traysOk = /^[\d]+,([0-9]|1[0-9]|2[0-9])$/.test(trayNo);
         if (traysOk) {
             if (new Date().getTimezoneOffset() !== -180  && localStorage.getItem('name') !== 'Victor') {
                 setOpen(false);
@@ -35,16 +42,14 @@ function InputTrays() {
                 setOpenError(true);
                 return -1;
             }
-            firestore.doc(`0/misc/checkpoints/${today}`)
-                .set({
-                    by: name,
-                    trays_collected: state,
-                    date: {
-                        unix: today,
-                        locale: strftime(
-                            "%m/%d/%Y, %H:%M:%S", new Date(today*1000)) + ', Africa/Nairobi'
-                    }
-                }, {merge: true});
+            let tempT = trayNo.split(',');
+            values.trays_collected = (parseInt(tempT[0]) * 30) + parseInt(tempT[1]);
+
+            firestore.collection("0").doc("misc").collection("pending")
+            .add({
+                create: true,
+                values
+            });
             firestore.collection("global").doc("config").collection("tasks_left").doc('0').update({
                 tasks_left: firestore.FieldValue.increment(1)
             });
@@ -68,7 +73,7 @@ function InputTrays() {
 
     const handleSelect = (e) => {
         e.preventDefault();
-        setState(e.target.value.trim());
+        setTrayNo(e.target.value.trim());
     }
 
     const componentDidMount = () => {

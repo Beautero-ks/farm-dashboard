@@ -32,9 +32,14 @@ import CardContent from '@mui/material/CardContent';
 import { BrowserView, MobileView } from 'react-device-detect';
 import {firestore} from '../../services/api/firebaseConfig';
 
+export const toTrayStr = (trayEgg) => {
+    const temp_t = trayEgg/30;
+    const temp_t2 = parseInt((temp_t - parseInt(temp_t)) * 30);
+    return `${parseInt(temp_t)},${temp_t2}`;
+}
 
 const __user__ = localStorage.getItem('name')?.toUpperCase() || '';
-const col_names = {"1": "Sale", "2": "Expense", "3": "Dead/Sick", "4": "Eggs", "5": "Trades"}
+const col_names = {"7": "Sale", "6": "Sale", "1": "Checkpoint", "2": "Expense", "3": "Dead/Sick", "4": "Eggs", "5": "Trades"}
 
 function createData(col_id, name, date, subm, hash, subg) {
     return {
@@ -380,12 +385,13 @@ function EnhancedTable(props) {
                                     }
 
                                     const by = data.by.toLowerCase();
-                                    const toPrint = row.col_id === '4' ? `flock: ${parseInt(data.subgroups.split('.')[0])+1} (${by}) trays ${data.trays_collected} [${row.hash.slice(0, 4)}]`
+                                    const toPrint = row.col_id === '4' ? `flock: ${parseInt(data.subgroups.split('.')[0])+1} (${by}) trays ${toTrayStr(data.trays_collected)} [${row.hash.slice(0, 4)}]`
                                         : row.col_id === '3'
                                             ? `(${by}) ${numeral(data.number).format(',')} ${data.state.toLowerCase()} [${row.hash.slice(0, 4)}]`
-                                            : row.col_id === '1' ? `(${by}) to ${data.buyer.toLowerCase()} ${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]`
+                                            : row.col_id === '7' ? `(${by}) to ${data.buyer.toLowerCase()} ${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]`
                                                 : (row.col_id === '2' || row.col_id === 'expenses') ? `(${by}) ${data.item_name.toLowerCase()} ${data.extra_data.bag_weight ? data.extra_data.bag_weight+' ' : ''}${data.extra_data.vendor?.toLowerCase() ? data.extra_data.vendor?.toLowerCase()+' ' : ''}${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]`
-                                                    : row.col_id === '5' ? `from ${from} to ${to} [${row.hash.slice(0, 4)}]` : row.col_id === '6' ? `(${by}) to ${data.buyer.toLowerCase()} ${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]` : '';
+                                                    : row.col_id === '5' ? `from ${from} to ${to} [${row.hash.slice(0, 4)}]` : row.col_id === '6' ? `(${by}) to ${data.buyer.toLowerCase()} ${numeral(data.units).format(',')}@${numeral(data.price).format(',')} [${row.hash.slice(0, 4)}]` : row.col_id === '1'
+                                                    ? `(${by}) [${row.hash.slice(0, 4)}]` : '';
 
                                     return (
                                         <TableRow
@@ -476,10 +482,11 @@ function EnhancedTable(props) {
                                             Date: {txs[item].date.locale.slice(0,20)}
                                         </Typography>
                                         <Typography variant="h5" component="div">
-                                            Collected {txs[item].trays_collected.split(',')[0]} tray(s) and {txs[item].trays_collected.split(',')[1]} egg(s)
+                                            Collected {toTrayStr(txs[item].trays_collected).split(',')[0]} tray(s) and {toTrayStr(txs[item].trays_collected).split(',')[1]} egg(s) {txs[item].trays_collected}
                                         </Typography>
                                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
                                             {JSON.stringify(txs[item])}
+                                            <br />
                                             Broken: {txs[item].broken}
                                         </Typography>
                                         <Typography variant="body2">
@@ -531,7 +538,7 @@ function EnhancedTable(props) {
                         </div>
                     )
                 }
-                else if (type === '1') {
+                else if (type === '7') {
                     return (
                         <div key={index}>
                             <Card variant="outlined">
@@ -570,7 +577,7 @@ function EnhancedTable(props) {
                                             Date: {txs[item].date.locale.slice(0,20)}
                                         </Typography>
                                         <Typography variant="h5" component="div">
-                                            {`${txs[item].section.toLowerCase() === 'pother' ? 'other,' : txs[item].section.toLowerCase() === 'ppurity' ? 'Purity:' : txs[item].section.toLowerCase()+','} ${txs[item].item_name.toLowerCase()}`}
+                                            {`${txs[item].section.toLowerCase() === 'pother' ? 'other,' : txs[item].section.toLowerCase() === 'ptitus' ? 'Titus:' : txs[item].section.toLowerCase()+','} ${txs[item].item_name.toLowerCase()}`}
                                         </Typography>
                                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
                                             {numeral(txs[item].units).format("0,0")} Item(s) at Ksh. {numeral(txs[item].price).format("0,0")}
@@ -642,6 +649,28 @@ function EnhancedTable(props) {
                                         </Typography>
                                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
                                             {numeral(txs[item].units).format("0,0")} Units(s) at Ksh. {numeral(txs[item].price).format("0,0")}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Submitted by {txs[item].by.toLowerCase()}
+                                        </Typography>
+                                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            id: {item.slice(0, 32)}<br />
+                                            {item.slice(32)}
+                                        </Typography>
+                                    </CardContent>
+                                </React.Fragment>
+                            </Card>
+                            <br />
+                        </div>
+                    )
+                } else if (type === '1') {
+                    return (
+                        <div key={index}>
+                            <Card variant="outlined">
+                                <React.Fragment>
+                                    <CardContent>
+                                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            Date: {txs[item].date.locale.slice(0,20)}
                                         </Typography>
                                         <Typography variant="body2">
                                             Submitted by {txs[item].by.toLowerCase()}

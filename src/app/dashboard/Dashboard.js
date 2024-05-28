@@ -34,12 +34,16 @@ function Dashboard(props) {
   const [allCheckedEggs, setAllCheckedEggs] = useState(false);
   const [pendCheckedEggs, setPendCheckedEggs] = useState({});
   const [disableEggs, setDisableEggs] = useState(false);
+  const [layDay, setLayDay] = useState({"date": 0, "laying_percent": 0});
 
   const __user__ = localStorage.getItem('name')?.toUpperCase() || '';
 
   useEffect(() => {
     if (dashboard) {
       setDash(dashboard[0]);
+      let latest = Math.max(...dashboard[0].laying_percent.map(o => o.date));
+      latest = dashboard[0].laying_percent.filter(o => o.date === latest);
+      setLayDay(latest[0]);
     }
   }, [dashboard]);
 
@@ -173,7 +177,7 @@ function Dashboard(props) {
       setPendCheckedEggs(allPend);
   }
 
-  if (!dash.laying_day) {
+  if (!dash.trays_left) {
       return <div />
   }
 
@@ -188,12 +192,12 @@ function Dashboard(props) {
                                  <div className="d-flex align-items-center align-self-start">
                                      <h3 className="mb-0">{!done1 &&
                                          <CountUp
-                                             start={Math.abs(Object.values(dash.laying_day['1'] || [0])[0]-10)}
-                                             end={Object.values(dash.laying_day['1'] || [0])[0]}
+                                             start={Math.abs(layDay.lay_percent - 10)}
+                                             end={layDay.lay_percent}
                                              duration={2.75}
                                              delay={1}
                                              onEnd={() => setDone1(true)}
-                                         />}{done1 && numeral(Object.values(dash.laying_day['1'] || [0])[0]).format("0,0")}%</h3>
+                                         />}{done1 && numeral(layDay.lay_percent).format("0,0")}%</h3>
                                      <p className={`text-success ml-2 mb-0 font-weight-medium`}>
                                          {'+'.concat(numeral().format("0,0.0"))}%
                                      </p>
@@ -208,7 +212,7 @@ function Dashboard(props) {
                                  </div>
                              </div>
                          </div>
-                         <h6 className="text-white-80 font-weight-normal">Flock 2 Lay Percent Day ({moment(Object.keys(dash.laying_day['1'] || [0])[0]*1000).format('MMM Do YY')})</h6>
+                         <h6 className="text-white-80 font-weight-normal">Flock 2 Lay Percent Day ({moment(layDay.date*1000).format('MMM Do YY')})</h6>
                      </div>
                  </div>
              </div>
@@ -243,7 +247,7 @@ function Dashboard(props) {
                              <div className="col-9">
                                  <div className="d-flex align-items-center align-self-start">
                                      <h3 className="mb-0">
-                                         {Object.values(dash.feeds_left['1'] || [0])[0]}
+                                         {dash.feeds_left.value}
                                      </h3>
                                      <p className={`text-success ml-2 mb-0 font-weight-medium`}>
                                          {'+'.concat(numeral().format("0,0.0"))}%
@@ -256,7 +260,7 @@ function Dashboard(props) {
                                  </div>
                              </div>
                          </div>
-                         <h6 className="text-white-80 font-weight-normal">Flock 2 Feeds in Store <br /> ({moment(Object.keys(dash.feeds_left['1'] || [0])[0]*1000).format('MMM Do YY')})</h6>
+                         <h6 className="text-white-80 font-weight-normal">Flock 2 Feeds in Store <br /> ({moment(dash.feeds_left?.date*1000).format('MMM Do YY')})</h6>
                      </div>
                  </div>
              </div>
@@ -267,7 +271,7 @@ function Dashboard(props) {
                              <div className="col-9">
                                  <div className="d-flex align-items-center align-self-start">
                                      <h3 className="mb-0">
-                                        {dash.trays_left['value']}</h3>
+                                        {parseInt(dash.trays_left['value']/30)},{parseInt(((dash.trays_left['value']/30) - parseInt(dash.trays_left['value']/30)) * 30)}</h3>
                                      <p className={`text-success ml-2 mb-0 font-weight-medium`}>
                                          {'+'.concat(numeral().format("0,0.0"))}%
                                      </p>
@@ -282,7 +286,7 @@ function Dashboard(props) {
                                  </div>
                              </div>
                          </div>
-                         <h6 className="text-white-80 font-weight-normal">Trays in Store ({moment(dash.trays_left['date']['unix']*1000).format('MMM Do YY')})</h6>
+                         <h6 className="text-white-80 font-weight-normal">Trays in Store ({moment(dash.trays_left['date']*1000).format('MMM Do YY')})</h6>
                      </div>
                  </div>
              </div>

@@ -18,7 +18,7 @@ function InputSell(props) {
   const { extraData } = props;
 
   const [state, setState] = useState({
-    col_id: '1',
+    col_id: '7',
     date: new Date(),
     buyer: '',
     price: '350',
@@ -168,7 +168,7 @@ function InputSell(props) {
 
     setState({
       ...state,
-      col_id: e === 'Other' ? '6' : '1'
+      col_id: e === 'Other' ? '6' : '7'
     });
   }
 

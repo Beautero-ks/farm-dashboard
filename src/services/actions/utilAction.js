@@ -1,6 +1,6 @@
 export const sanitize_string = (values) => {
     if (values.col_id === '5') return 'Trade';
-    if (values.col_id === '1') {
+    if (values.col_id === '7') {
         const description = values.buyer.toLowerCase();
         return description.charAt(0).toUpperCase()+description.slice(1);
     }
@@ -18,4 +18,5 @@ export const sanitize_string = (values) => {
         const description = values.buyer.toLowerCase();
         return description.charAt(0).toUpperCase()+description.slice(1);
     }
+    if (values.col_id === "1") return "Checkpoint";
 }

@@ -52,7 +52,7 @@ function LatePayment(props) {
     }
 
     useEffect(() => {
-        let resPend = Object.values(pendChecked).filter(x => x[0] === true && x[1] === "1");
+        let resPend = Object.values(pendChecked).filter(x => x[0] === true && (x[1] === "6" || x[1] === "7"));
         resPend = resPend.reduce((acc, cur) => acc + cur[4], 0);
         setTotal(resPend);
     }, [pendChecked]);
@@ -61,7 +61,7 @@ function LatePayment(props) {
         if (!late) return 0;
         let amount = 0;
         for (let i = 0; i < late.length; i++) {
-            if (late[i].col_id === "1")
+            if (late[i].col_id === "6" || late[i].col_id === "7")
                 amount += parseInt(late[i].price) * parseInt(late[i].units);
         }
         setFullAmount(amount);
