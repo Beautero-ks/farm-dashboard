@@ -50,7 +50,7 @@ function InputEggs(props) {
             const econs = extraData.filter(x => x.id === 'constants');
             let groups = econs[0].all_subgroups || {};
             groups = Object.keys(groups).filter(
-                key => key.split('.')[1] === '0').reduce(
+                key => key.split('.')[1] === '0' && key.split('.')[0] !== '0').reduce(
                     (cur, key) => { return Object.assign(cur, { [key]: groups[key] })}, {});
 
             setGroups(Object.values(groups) || []);
@@ -60,10 +60,7 @@ function InputEggs(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const trayStoreRegex = /^[0-9]+,([0-9]|1[0-9]|2[0-9])$/;
-        let eggsRegex = /^([0-9]+,){11}[0-9]+$/;
-
-        if (state.flock === 'flock 2' || state.flock === 'flock 3')
-            eggsRegex = /^([0-9]+,){5}[0-9]+$/;
+        let eggsRegex = /^([0-9]+,){5}[0-9]+$/;
 
         const bagsRegex = /^[0-9]+$/.test(state.bags);
         const brokenRegex = /^[0-9]+$/.test(state.broken);
@@ -72,14 +69,7 @@ function InputEggs(props) {
             ...state
         };
 
-        if (state.eggs1 && state.eggs2 && state.eggs3 && state.eggs4) {
-            temp.eggs = state.eggs1 + ',' + state.eggs2
-                + ',' + state.eggs3 + ',' + state.eggs4;
-            delete temp.eggs1;
-            delete temp.eggs2;
-            delete temp.eggs3;
-            delete temp.eggs4;
-        } else if (state.eggs1 && state.eggs2) {
+        if (state.eggs1 && state.eggs2) {
             temp.eggs = state.eggs1 + ',' + state.eggs2;
             console.log("change", temp.eggs);
             delete temp.eggs1;
@@ -88,7 +78,7 @@ function InputEggs(props) {
             delete temp.eggs4;
         }
         const arr = Object.entries(temp);
-
+        console.log(temp);
         if (!eggsRegex.test(temp.eggs)) {
             setError('eggs collected should be in this format [a,b,c]');
             setOpenError(true);
@@ -144,7 +134,8 @@ function InputEggs(props) {
             return;
         }
         const offBy = getEggsDiff(temp);
-    
+        const tempT = temp.trays_collected.split(',');
+        temp.trays_collected = (parseInt(tempT[0]) * 30) + parseInt(tempT[1]);
         props.inputTray(temp);
 
         if (offBy !== 0) {
@@ -272,16 +263,6 @@ function InputEggs(props) {
                                 <label htmlFor="eggs">Eggs column 2</label>
                                 <Form.Control type="text" onChange={handleSelect} className="form-control text-white" id="eggs2" placeholder="Eggs in column 2 (comma separated)" />
                             </Form.Group>
-                            {(state.flock === 'flock 1' || !state.flock)  && 
-                            <Form.Group>
-                                <label htmlFor="eggs">Eggs column 3</label>
-                                <Form.Control type="text" onChange={handleSelect} className="form-control text-white" id="eggs3" placeholder="Eggs in column 3 (comma separated)" />
-                            </Form.Group>}
-                            {(state.flock === 'flock 1' || !state.flock) &&
-                            <Form.Group>
-                                <label htmlFor="eggs">Eggs column 4</label>
-                                <Form.Control type="text" onChange={handleSelect} className="form-control text-white" id="eggs4" placeholder="Eggs in column 4 (comma separated)" />
-                            </Form.Group>}
                             <Form.Group>
                                 <label htmlFor="broken">Broken</label>
                                 <Form.Control type="text" onChange={handleSelect} className="form-control text-white" id="broken" placeholder="Broken Eggs" />

@@ -27,6 +27,8 @@ export const inputSell = (values, isPending) => {
     newDate.setHours(0, 0, 0, 0);
     values.date = newDate;
     values.submitted_on = new Date();
+    console.log(values);
+    return;
 
     if (isPending) {
         values.check_group = '0';

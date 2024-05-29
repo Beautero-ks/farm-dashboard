@@ -31,12 +31,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { BrowserView, MobileView } from 'react-device-detect';
 import {firestore} from '../../services/api/firebaseConfig';
-
-export const toTrayStr = (trayEgg) => {
-    const temp_t = trayEgg/30;
-    const temp_t2 = parseInt((temp_t - parseInt(temp_t)) * 30);
-    return `${parseInt(temp_t)},${temp_t2}`;
-}
+import { toTrayStr } from '../dashboard/Dashboard';
 
 const __user__ = localStorage.getItem('name')?.toUpperCase() || '';
 const col_names = {"7": "Sale", "6": "Sale", "1": "Checkpoint", "2": "Expense", "3": "Dead/Sick", "4": "Eggs", "5": "Trades"}

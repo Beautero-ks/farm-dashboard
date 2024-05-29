@@ -12,6 +12,12 @@ import {Offline, Online} from "react-detect-offline";
 import CountUp from 'react-countup';
 
 
+export const toTrayStr = (trayEgg) => {
+    const temp_t = trayEgg/30;
+    const temp_t2 = parseInt((temp_t - parseInt(temp_t)) * 30);
+    return `${parseInt(temp_t)},${temp_t2}`;
+}
+
 export function getRanColor() {
   const ranR = Math.floor((Math.random()*255)+1).toString(16);
   const ranG = Math.floor((Math.random()*255)+1).toString(16);
@@ -360,7 +366,7 @@ function Dashboard(props) {
                                                        : <div className="badge badge-outline-primary">Waiting</div>}
                                        </td>
                                        <td> {moment(item_vals.date.toDate()).format("MMM Do YY")} </td>
-                                       <td> flock: {parseInt(item_vals.subgroups?.split('.')[0])+1}, trays: ({item_vals.trays_collected}) </td>
+                                       <td> flock: {parseInt(item_vals.subgroups?.split('.')[0])+1}, trays: ({toTrayStr(item_vals.trays_collected)}) </td>
                                        <td> {item_vals.bags} </td>
                                        <td> {item_vals.eggs.slice(0, item_vals.eggs.length-1)} </td>
                                        <td> {item_vals.broken} </td>
