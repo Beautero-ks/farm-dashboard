@@ -78,7 +78,7 @@ function InputEggs(props) {
             delete temp.eggs4;
         }
         const arr = Object.entries(temp);
-        console.log(temp);
+
         if (!eggsRegex.test(temp.eggs)) {
             setError('eggs collected should be in this format [a,b,c]');
             setOpenError(true);
